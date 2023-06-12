@@ -1,4 +1,5 @@
 ---
+id: article1
 title: Understanding the Functioning of ChatGPT: An Introduction to AI Language Models
 author: Chat GPT3
 date: 2023-06-14

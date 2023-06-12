@@ -15,11 +15,11 @@ app.get('/articles', (req, res) => {
       console.error('Error reading articles:', err);
       res.status(500).json({ error: 'Failed to read articles' });
     } else {
-      const articles = files.map((file) => {
+    const articles = files.map((file, index) => {
         const filePath = path.join(articlesDir, file);
         const articleContent = fs.readFileSync(filePath, 'utf-8');
-        return { filename: file, content: articleContent };
-      });
+        return { id: `article${index}`, filename: file, content: articleContent };
+        });
       res.json({ articles });
     }
   });
