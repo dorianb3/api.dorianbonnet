@@ -1,6 +1,6 @@
 ---
 id: article1
-title: Understanding the Functioning of ChatGPT: An Introduction to AI Language Models
+title: Understanding the Functioning of ChatGPT An Introduction to AI Language Models
 author: Chat GPT3
 date: 2023-06-14
 abstract: Explore the inner workings of ChatGPT, an AI language model, and gain insights into its training process, architecture, and text generation mechanisms.
