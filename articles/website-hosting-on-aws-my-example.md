@@ -5,8 +5,6 @@ author: Your Name
 abstract: Learn how to host a website using Amazon Web Services (AWS) by setting up an S3 bucket and an EC2 instance.
 ---
 
-# Website hosting with AWS: My Example
-
 In this article, we will walk through the process of hosting a website using Amazon Web Services (AWS). We will start by setting up an S3 bucket to store our website files and then proceed to configure an EC2 instance to serve the website to the world.
 
 ## Step 1: Setting up an S3 Bucket

@@ -17,7 +17,6 @@ app.get('/articles', (req, res) => {
       res.status(500).json({ error: 'Failed to read articles' });
     } else {
     const articles = files.map((file, index) => {
-        console.log(file);
         const filePath = path.join(articlesDir, file);
         const articleContent = fs.readFileSync(filePath, 'utf-8');
         return { id: `article${index}`, filename: file, content: articleContent };
