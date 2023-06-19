@@ -21,15 +21,6 @@ To get to the heart of the matter without further ado, we'll walk through everyt
 
 ## Step 1: Setting up an S3 Bucket
 
-1. Log in to the AWS Management Console and navigate to the S3 service.
-2. Click on "Create bucket" to start creating a new bucket.
-3. Provide a unique name for your bucket, such as "my-website-bucket".
-4. Choose the region where you want to host your bucket.
-5. Configure the bucket permissions and policies according to your requirements.
-6. Upload your website files to the bucket, including HTML, CSS, JavaScript, and any other assets.
-7. Enable static website hosting for the bucket and specify the default index document.
-8. Note down the bucket's endpoint URL, as we will need it in the next step.
-
 Go to the AWS console and search for S3. We're going to actually create two different buckets for our website, one with the name of our website with "www" in front of it and one another without. The reason why we need both is because one of them is going to be the authority and going to have all of our content in it and the other is going to be for redirect. I personaly choose the "www" one to be the authority so when someone goes to the non-www one it's going to redirect to the other version. - Clic on create bucket, - Change "bucket name" to "www.<website_name>" - Choose a region close to you - Leave everything else as default - Clic on create bucket - Create a second bucket without www
 
 Go to your authority bucket, the "www" one for me and upload your files. Leave everything as default and clic on uplaod. After you have uploaded your website files to the bucket, including HTML, CSS, JavaScript, and any other assets, we need to enable some public settings. By default, public access is blocked. Go back to your authority bucket and clic on permission and the first thing we need to do is desable "Bloc public access". Then we need to edit our bucket policy to allow anyone to call the S3 get object api on our bucket, so change it as follow:
