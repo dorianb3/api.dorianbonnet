@@ -2,12 +2,22 @@
 title: Website hosting with AWS: My Example
 date: June 9, 2023
 author: Dorian Bonnet
-abstract: Learn how to host a website using Amazon Web Services (AWS) by setting up an S3 bucket and an EC2 instance.
+abstract: Learn how to host a static website using Amazon Web Services (AWS) by setting up an S3 bucket that store your 
+static contents and an EC2 instance that serve your website with all data you need.
 keywords: AWS, React, JavaScript
 topic: Web Development
 ---
 
-In this article, we will walk through the process of hosting a website using Amazon Web Services (AWS). We will start by setting up an S3 bucket to store our website files and then proceed to configure an EC2 instance to serve the website to the world.
+In this article I put on paper my journey in the creation of this website on which you are currently. In this process I went through many stages, worked and learned many concepts in web development field. Thus, this article aims to inspire and help all those who want to travel this journey.
+
+To get to the heart of the matter without further ado, we'll walk through everything you need to bring your website to life using AWS. Specifically, we will discuss the following:
+
+1. Create S3 buckets to store your website files
+2. Setup a DNS and its settings with Route 53
+3. Caching and make a secure connection with Cloudfront
+4. Automate the update of your S3 bucket with github action
+5. Create an API on EC2 to serve your website
+6. make a secure connection between your website and your API with a Certificate Authority
 
 ## Step 1: Setting up an S3 Bucket
 
@@ -19,6 +29,34 @@ In this article, we will walk through the process of hosting a website using Ama
 6. Upload your website files to the bucket, including HTML, CSS, JavaScript, and any other assets.
 7. Enable static website hosting for the bucket and specify the default index document.
 8. Note down the bucket's endpoint URL, as we will need it in the next step.
+
+Go to the AWS console and search for S3. We're going to actually create two different buckets for our website, one with the name of our website with "www" in front of it and one another without. The reason why we need both is because one of them is going to be the authority and going to have all of our content in it and the other is going to be for redirect. I personaly choose the "www" one to be the authority so when someone goes to the non-www one it's going to redirect to the other version. - Clic on create bucket, - Change "bucket name" to "www.<website_name>" - Choose a region close to you - Leave everything else as default - Clic on create bucket - Create a second bucket without www
+
+Go to your authority bucket, the "www" one for me and upload your files. Leave everything as default and clic on uplaod. After you have uploaded your website files to the bucket, including HTML, CSS, JavaScript, and any other assets, we need to enable some public settings. By default, public access is blocked. Go back to your authority bucket and clic on permission and the first thing we need to do is desable "Bloc public access". Then we need to edit our bucket policy to allow anyone to call the S3 get object api on our bucket, so change it as follow:
+
+```
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "PublicReadGetObject",
+            "Effect": "Allow",
+            "Principal": "*",
+            "Action": [
+                "s3:GetObject"
+            ],
+            "Resource": [
+                "arn:aws:s3:::<www.website_name>/*"
+            ]
+        }
+    ]
+}
+```
+
+Make sure to replace <www.website_name> with the correct value and clic on save changes.
+
+We need now to enable "website static hosting" on our authority bucket. So go to properties and scroll all the way down and there should be a section for it. Clic on edit. select "enable" and you'll see two option of hosting type. Since this is the bucket where we uploaded all the content it's going to be the host for the static website. Don't forget to specify the default index document and clic on save changes
+Go back to buckets and clic on the non-www one. Scroll all the way down and edit "static website hosting". Enable it, select "Redirect requests for an object", the host name is going to be the name of our other bucket, "www.<website_name>" and select http as protocol. In a later steps when we'll use cloudfront we're going to come back here and set this to https so we can get security on our website. That is everyting that we need to do from S3 perpective for now
 
 ## Step 2: Configuring an EC2 Instance
 
