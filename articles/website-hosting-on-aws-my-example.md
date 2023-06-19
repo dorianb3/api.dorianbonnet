@@ -25,22 +25,18 @@ Go to the AWS console and search for S3. We're going to actually create two diff
 
 Go to your authority bucket, the "www" one for me and upload your files. Leave everything as default and clic on uplaod. After you have uploaded your website files to the bucket, including HTML, CSS, JavaScript, and any other assets, we need to enable some public settings. By default, public access is blocked. Go back to your authority bucket and clic on permission and the first thing we need to do is desable "Bloc public access". Then we need to edit our bucket policy to allow anyone to call the S3 get object api on our bucket, so change it as follow:
 
-```
+```json
 {
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Sid": "PublicReadGetObject",
-            "Effect": "Allow",
-            "Principal": "*",
-            "Action": [
-                "s3:GetObject"
-            ],
-            "Resource": [
-                "arn:aws:s3:::<www.website_name>/*"
-            ]
-        }
-    ]
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "PublicReadGetObject",
+      "Effect": "Allow",
+      "Principal": "*",
+      "Action": ["s3:GetObject"],
+      "Resource": ["arn:aws:s3:::<www.website_name>/*"]
+    }
+  ]
 }
 ```
 
@@ -48,6 +44,87 @@ Make sure to replace <www.website_name> with the correct value and clic on save 
 
 We need now to enable "website static hosting" on our authority bucket. So go to properties and scroll all the way down and there should be a section for it. Clic on edit. select "enable" and you'll see two option of hosting type. Since this is the bucket where we uploaded all the content it's going to be the host for the static website. Don't forget to specify the default index document and clic on save changes
 Go back to buckets and clic on the non-www one. Scroll all the way down and edit "static website hosting". Enable it, select "Redirect requests for an object", the host name is going to be the name of our other bucket, "www.<website_name>" and select http as protocol. In a later steps when we'll use cloudfront we're going to come back here and set this to https so we can get security on our website. That is everyting that we need to do from S3 perpective for now
+
+```javascript
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { parseArticle } from "./Utils";
+
+const ArticleList = () => {
+  const [articles, setArticles] = useState([]);
+  const [selectedTopic, setSelectedTopic] = useState("");
+
+  useEffect(() => {
+    fetch("https://api.dorianbonnet.com/articles")
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Failed to fetch articles");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        const parsedArticles = data.articles.map((article) =>
+          parseArticle(article)
+        );
+        const sortedArticles = parsedArticles.sort(
+          (a, b) => new Date(b.metadata.date) - new Date(a.metadata.date)
+        );
+        setArticles(sortedArticles);
+      })
+      .catch((error) => {
+        console.error("Error fetching articles:", error);
+      });
+  }, []);
+
+  const handleTopicFilter = (topic) => {
+    setSelectedTopic(topic);
+  };
+  const handleResetFilter = () => {
+    setSelectedTopic("");
+  };
+
+  const filteredArticles = selectedTopic
+    ? articles.filter((article) => article.metadata.topic === selectedTopic)
+    : articles;
+  return (
+    <div className="articleSection">
+      <div className="topicList">
+        <div
+          className={selectedTopic === "" ? "active" : ""}
+          onClick={handleResetFilter}
+        >
+          Show All
+        </div>
+        {articles.map((article, index) => (
+          <div
+            className={
+              selectedTopic === `${article.metadata.topic}` ? "active" : ""
+            }
+            key={index}
+            onClick={() => handleTopicFilter(`${article.metadata.topic}`)}
+          >
+            {"#" + article.metadata.topic}
+          </div>
+        ))}
+      </div>
+      <div className="articleList">
+        {filteredArticles.map((article, index) => (
+          <div key={index} className="card">
+            <Link to={`articles/${article.filename}`}>
+              <h2 className="title">{article.metadata.title}</h2>
+              <div className="date">{article.metadata.date}</div>
+              <p className="abstract">{article.metadata.abstract}</p>
+              <div className="topic">{article.metadata.topic}</div>
+            </Link>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default ArticleList;
+```
 
 ## Step 2: Configuring an EC2 Instance
 
