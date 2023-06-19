@@ -6,6 +6,7 @@ abstract: Learn how to host a static website using Amazon Web Services (AWS) by 
 static contents and an EC2 instance that serve your website with all data you need.
 keywords: AWS, React, JavaScript
 topic: Web Development
+status: canceled
 ---
 
 In this article I put on paper my journey in the creation of this website on which you are currently. In this process I went through many stages, worked and learned many concepts in web development field. Thus, this article aims to inspire and help all those who want to travel this journey.

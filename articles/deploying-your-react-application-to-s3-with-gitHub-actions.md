@@ -5,7 +5,7 @@ author: Dorian Bonnet
 abstract: In this tutorial, we will walk through the process of automating the deployment of your React application to an S3 bucket using GitHub Actions. By leveraging the power of continuous integration and deployment, you can streamline the deployment process and ensure that your application is always up-to-date.
 keywords: AWS, S3, React, Github Action, Yaml
 topic: Web Development
-status: canceled
+status: ok
 ---
 
 Prerequisites:
