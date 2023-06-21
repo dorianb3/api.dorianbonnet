@@ -31,25 +31,25 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout code
+      # Checkout code
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # Step 2: Set up Node.js
+      # Set up Node.js
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
           node-version: 14
 
-      # Step 3: Install dependencies
+      # Install dependencies
       - name: Install dependencies
         run: npm install
 
-      # Step 4: Build application
+      # Build application
       - name: Build application
         run: npm run build
 
-      # Step 5: Configure AWS Credentials
+      # Configure AWS Credentials
       - name: Configure AWS Credentials
         id: aws-credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -58,18 +58,18 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: eu-west-3
 
-      # Step 6: Deploy static site to S3 bucket
+      # Deploy static site to S3 bucket
       - name: Deploy static site to S3 bucket
         run: aws s3 sync ./build s3://your-bucket-name --acl public-read --delete --exclude '/*' --include '*/*'
 
-      # Step 7: Create CloudFront invalidation
+      # Create CloudFront invalidation
       - name: Create CloudFront invalidation
         run: |
           aws cloudfront create-invalidation \
             --distribution-id YOUR_DISTRIBUTION_ID \
             --paths "/*"
 
-      # Step 8: Set AWS credentials as environment variables
+      # Set AWS credentials as environment variables
       - name: Set AWS credentials as environment variables
         run: |
           echo "AWS_ACCESS_KEY_ID=${{ steps.aws-credentials.outputs.access-key-id }}" >> $GITHUB_ENV
