@@ -42,19 +42,19 @@ app.get('/articles/:filename', (req, res) => {
   });
 });
 
-app.get('/articles/:filename/commits', (req, res) => {
-  const { filename } = req.params;
-  const commitHistoryPath = path.join(__dirname, 'commit_history', `${filename}.json`); // Directory to store commit history files
-  fs.readFile(commitHistoryPath, 'utf-8', (err, data) => {
-    if (err) {
-      console.error('Error reading commit history:', err);
-      res.status(500).json({ error: 'Failed to read commit history' });
-    } else {
-      const commitHistory = JSON.parse(data);
-      res.json({ commitHistory });
-    }
-  });
-});
+// app.get('/articles/:filename/commits', (req, res) => {
+//   const { filename } = req.params;
+//   const commitHistoryPath = path.join(__dirname, 'commit_history', `${filename}.json`); // Directory to store commit history files
+//   fs.readFile(commitHistoryPath, 'utf-8', (err, data) => {
+//     if (err) {
+//       console.error('Error reading commit history:', err);
+//       res.status(500).json({ error: 'Failed to read commit history' });
+//     } else {
+//       const commitHistory = JSON.parse(data);
+//       res.json({ commitHistory });
+//     }
+//   });
+// });
 
 // Start the server
 app.listen(3000, () => {
